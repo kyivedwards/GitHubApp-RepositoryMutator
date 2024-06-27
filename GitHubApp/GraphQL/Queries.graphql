@@ -1,0 +1,28 @@
+
+
+query GetRepositoriesByUserName($username: String!){
+  user(login: $username){
+    repositories(last: 10){
+      nodes{
+        id
+        name
+        description
+        createdAt
+        url
+        stargazerCount
+      }
+    }
+  }
+}
+
+mutation CreateRepository($name: String!, $description: String, $visibility: RepositoryVisibility!, $clientMutationId: String) {
+  createRepository(input: {
+    name: $name
+    visibility: $visibility
+    description: $description,
+    clientMutationId: $clientMutationId
+  }) {
+    clientMutationId
+  }
+}
+
