@@ -11,18 +11,16 @@ import SwiftUI
 struct AddRepositoryScreen: View {
     
     @Environment(\.presentationMode) private var presentationMode
-    @State private var name: String = ""
-    @State private var description: String = ""
-    @State private var visibility: String = "public"
+    @StateObject private var addRepositoryVM = AddRepositoryViewModel()
     
     var body: some View {
         Form {
-            TextField("Name", text: $name)
-            TextField("Description", text: $description)
+            TextField("Name", text: $addRepositoryVM.name)
+            TextField("Description", text: $addRepositoryVM.description)
             
-            Picker("Select", selection: $visibility, content: {
-                Text("Public").tag("public")
-                Text("Private").tag("private")
+            Picker("Select", selection: $addRepositoryVM.visibility, content: {
+                Text("Public").tag(RepositoryVisibility.public)
+                Text("Private").tag(RepositoryVisibility.private)
             }).pickerStyle(SegmentedPickerStyle())
             
             
@@ -30,7 +28,9 @@ struct AddRepositoryScreen: View {
                 Spacer()
                 Button("Save") {
                     
-                
+                    addRepositoryVM.saveRepository {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
                 Spacer()
             }

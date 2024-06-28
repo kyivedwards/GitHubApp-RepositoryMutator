@@ -14,7 +14,7 @@ struct Constants {
     }
     
     struct APIKeys {
-        static let GitHubAccessToken: String = "Testing2"
+        static let GitHubAccessToken: String = ""
     }
     
 }

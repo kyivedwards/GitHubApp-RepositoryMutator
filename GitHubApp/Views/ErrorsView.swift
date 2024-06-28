@@ -2,7 +2,7 @@
 //  ErrorView.swift
 //  GitHubApp
 //
-//  Created by Kyiv Edwards on 6/24/24.
+//  Created by Kyiv Edwards on 6/25/24.
 //
 
 import SwiftUI

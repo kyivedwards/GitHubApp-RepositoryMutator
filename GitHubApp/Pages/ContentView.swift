@@ -13,13 +13,14 @@ struct ContentView: View {
     @State private var repositoriesDisplay: String = "latest"
     @State private var isPresented: Bool = false
     @StateObject private var repositoryListVM = RepositoryListViewModel()
+    @State private var cancellable: AnyCancellable?
     
     var body: some View {
         VStack {
             
-            Picker("Select", selection: $repositoriesDisplay, content: {
-                Text("Latest").tag("latest")
-                Text("Top").tag("top")
+            Picker("Select", selection: $repositoryListVM.repositoriesDisplay, content: {
+                Text("Latest").tag(RepositoriesDisplay.latest)
+                Text("Top").tag(RepositoriesDisplay.top)
             }).pickerStyle(SegmentedPickerStyle())
             
             
@@ -47,7 +48,16 @@ struct ContentView: View {
         }
         .padding()
         .onAppear(perform: {
-            repositoryListVM.getLatestRepositoriesForUser(username: Constants.User.username)
+            
+            self.cancellable = repositoryListVM.$repositoriesDisplay.sink { (display) in
+                switch display {
+                case .latest:
+                    repositoryListVM.getLatestRepositoriesForUser(username: Constants.User.username)
+                case .top:
+                    repositoryListVM.getTopRepositoriesForUser(username: Constants.User.username)
+                }
+            }
+            
         })
         .navigationBarItems(trailing: Button(action: {
             isPresented = true
@@ -55,7 +65,7 @@ struct ContentView: View {
             Image(systemName: "plus")
         }))
         .sheet(isPresented: $isPresented, onDismiss: {
-            
+            repositoryListVM.getLatestRepositoriesForUser(username: Constants.User.username)
         }, content: {
             AddRepositoryScreen()
         })
